@@ -62,8 +62,9 @@ export default function HomeSearchBar() {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-4 md:p-5 w-full max-w-4xl">
-      <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
+    <div className="bg-white shadow-lg rounded-xl p-4 md:p-5 w-full max-w-4xl mx-auto">
+
+      <div className="flex flex-col md:flex-row gap-3 items-center justify-center">
 
         {/* Dance Style */}
         <select
@@ -154,6 +155,7 @@ export default function HomeSearchBar() {
         >
           🔍 Search
         </button>
+
       </div>
     </div>
   );
