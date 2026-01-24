@@ -16,7 +16,7 @@ export default function HomeSearchBar() {
 
   const [suggestions, setSuggestions] = useState([]);
 
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const danceStyles = [
     "Bachata",
@@ -55,23 +55,31 @@ export default function HomeSearchBar() {
 
   // Close dropdown when clicking outside
   useEffect(() => {
-    function handleClickOutside(e) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setSuggestions([]);
       }
     }
+
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // TEMPORARY: Clear suggestions until we add hybrid autocomplete
+  // TEMPORARY: No suggestions until hybrid autocomplete is added
   useEffect(() => {
     if (city.length < 2) {
       setSuggestions([]);
       return;
     }
 
-    // For now, no external API → no suggestions
+    // Placeholder — will be replaced with:
+    // 1. Local JSON filtering
+    // 2. Supabase query
+    // 3. Google Places fallback
     setSuggestions([]);
   }, [city]);
 
@@ -89,7 +97,6 @@ export default function HomeSearchBar() {
 
   return (
     <div className="bg-white shadow-lg rounded-xl p-4 md:p-5 w-full max-w-4xl mx-auto">
-
       <div className="flex flex-col md:flex-row gap-3 items-center justify-center">
 
         {/* Dance Style */}
@@ -175,10 +182,9 @@ export default function HomeSearchBar() {
             className="border rounded-lg p-3 text-gray-700 w-full bg-gray-50"
           />
 
-          {/* Suggestions will appear here once we add hybrid autocomplete */}
           {suggestions.length > 0 && (
             <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg mt-1 z-30">
-              {suggestions.map((item, index) => (
+              {suggestions.map((item: any, index: number) => (
                 <div
                   key={index}
                   onClick={() => {
@@ -200,10 +206,3 @@ export default function HomeSearchBar() {
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold w-full md:w-auto"
         >
           🔍 Search
-        </button>
-
-      </div>
-    </div>
-  );
-}
-
