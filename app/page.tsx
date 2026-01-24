@@ -206,3 +206,4 @@ export default function HomeSearchBar() {
     </div>
   );
 }
+
