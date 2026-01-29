@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-export default function HomeSearchBar() {
+export default function HomePage() {
   const router = useRouter();
 
   const [city, setCity] = useState("");
@@ -115,7 +115,7 @@ export default function HomeSearchBar() {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-xl p-4 md:p-5 w-full max-w-4xl mx-auto">
+    <div className="bg-white shadow-lg rounded-xl p-4 md:p-5 w-full max-w-4xl mx-auto mt-10">
       <div className="flex flex-col md:flex-row gap-3 items-center justify-center">
 
         {/* Dance Style */}
@@ -164,3 +164,70 @@ export default function HomeSearchBar() {
           </button>
 
           {showDatePicker && (
+            <div className="absolute z-20 bg-white shadow-lg rounded-lg p-4 mt-2 w-64">
+              <label className="text-sm text-gray-600">From</label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="border rounded-lg p-2 w-full mb-3"
+              />
+
+              <label className="text-sm text-gray-600">To</label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="border rounded-lg p-2 w-full"
+              />
+
+              <button
+                onClick={() => setShowDatePicker(false)}
+                className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
+              >
+                Done
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* City Autocomplete */}
+        <div className="relative w-full md:w-40" ref={dropdownRef}>
+          <input
+            type="text"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            placeholder="City"
+            className="border rounded-lg p-3 text-gray-700 w-full bg-gray-50"
+          />
+
+          {suggestions.length > 0 && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg mt-1 z-30">
+              {suggestions.map((item: any, index: number) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setCity(item.formatted_name || item.city_name);
+                    setSuggestions([]);
+                  }}
+                  className="p-3 hover:bg-gray-100 cursor-pointer text-gray-700"
+                >
+                  {item.formatted_name || item.city_name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Search Button */}
+        <button
+          onClick={handleSearch}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold w-full md:w-auto"
+        >
+          🔍 Search
+        </button>
+
+      </div>
+    </div>
+  );
+}
