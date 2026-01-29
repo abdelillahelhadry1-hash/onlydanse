@@ -69,18 +69,37 @@ export default function HomeSearchBar() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // TEMPORARY: No suggestions until hybrid autocomplete is added
+  // ⭐ REAL AUTOCOMPLETE LOGIC
   useEffect(() => {
     if (city.length < 2) {
       setSuggestions([]);
       return;
     }
 
-    // Placeholder — will be replaced with:
-    // 1. Local JSON filtering
-    // 2. Supabase query
-    // 3. Google Places fallback
-    setSuggestions([]);
+    const controller = new AbortController();
+
+    async function fetchCities() {
+      try {
+        const res = await fetch(`/api/cities/search?q=${city}`, {
+          signal: controller.signal,
+        });
+
+        if (!res.ok) {
+          setSuggestions([]);
+          return;
+        }
+
+        const data = await res.json();
+        setSuggestions(data || []);
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          setSuggestions([]);
+        }
+      }
+    }
+
+    fetchCities();
+    return () => controller.abort();
   }, [city]);
 
   const handleSearch = () => {
@@ -145,70 +164,3 @@ export default function HomeSearchBar() {
           </button>
 
           {showDatePicker && (
-            <div className="absolute z-20 bg-white shadow-lg rounded-lg p-4 mt-2 w-64">
-              <label className="text-sm text-gray-600">From</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className="border rounded-lg p-2 w-full mb-3"
-              />
-
-              <label className="text-sm text-gray-600">To</label>
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                className="border rounded-lg p-2 w-full"
-              />
-
-              <button
-                onClick={() => setShowDatePicker(false)}
-                className="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
-              >
-                Done
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* City Autocomplete */}
-        <div className="relative w-full md:w-40" ref={dropdownRef}>
-          <input
-            type="text"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            placeholder="City"
-            className="border rounded-lg p-3 text-gray-700 w-full bg-gray-50"
-          />
-
-          {suggestions.length > 0 && (
-            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg mt-1 z-30">
-              {suggestions.map((item: any, index: number) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    setCity(`${item.city}, ${item.country}`);
-                    setSuggestions([]);
-                  }}
-                  className="p-3 hover:bg-gray-100 cursor-pointer text-gray-700"
-                >
-                  {item.city}, {item.country}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Search Button */}
-        <button
-          onClick={handleSearch}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold w-full md:w-auto"
-        >
-          🔍 Search
-        </button>
-
-      </div>
-    </div>
-  );
-}
