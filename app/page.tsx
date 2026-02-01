@@ -69,7 +69,7 @@ export default function HomePage() {
       document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ⭐ REAL AUTOCOMPLETE LOGIC
+  // ⭐ Google Places Autocomplete
   useEffect(() => {
     if (city.length < 2) {
       setSuggestions([]);
@@ -80,7 +80,7 @@ export default function HomePage() {
 
     async function fetchCities() {
       try {
-        const res = await fetch(`/api/cities/search?q=${city}`, {
+        const res = await fetch(`/api/places?input=${city}`, {
           signal: controller.signal,
         });
 
@@ -90,7 +90,7 @@ export default function HomePage() {
         }
 
         const data = await res.json();
-        setSuggestions(data || []);
+        setSuggestions(data.predictions || []);
       } catch (err: any) {
         if (err.name !== "AbortError") {
           setSuggestions([]);
@@ -146,24 +146,73 @@ export default function HomePage() {
           ))}
         </select>
 
-        {/* Date Range */}
+        {/* ⭐ Smart Date Picker */}
         <div className="relative w-full md:w-40">
           <button
-            onClick={() => setShowDatePicker(!showDatePicker)}
+            onClick={() => setShowDatePicker(showDatePicker ? false : "menu")}
             className="border rounded-lg p-3 text-gray-700 w-full text-left bg-gray-50"
           >
-            {startDate && endDate
-              ? `${new Date(startDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })} → ${new Date(endDate).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                })}`
-              : "Date"}
+            Today
           </button>
 
-          {showDatePicker && (
+          {/* Quick menu */}
+          {showDatePicker === "menu" && (
+            <div className="absolute z-20 bg-white shadow-lg rounded-lg p-2 mt-2 w-48">
+
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+                onClick={() => {
+                  const today = new Date();
+                  const iso = today.toISOString().split("T")[0];
+                  setStartDate(iso);
+                  setEndDate(iso);
+                  setShowDatePicker(false);
+                }}
+              >
+                Today
+              </div>
+
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+                onClick={() => {
+                  const tomorrow = new Date();
+                  tomorrow.setDate(tomorrow.getDate() + 1);
+                  const iso = tomorrow.toISOString().split("T")[0];
+                  setStartDate(iso);
+                  setEndDate(iso);
+                  setShowDatePicker(false);
+                }}
+              >
+                Tomorrow
+              </div>
+
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+                onClick={() => {
+                  const today = new Date();
+                  const nextWeek = new Date();
+                  nextWeek.setDate(today.getDate() + 7);
+                  setStartDate(today.toISOString().split("T")[0]);
+                  setEndDate(nextWeek.toISOString().split("T")[0]);
+                  setShowDatePicker(false);
+                }}
+              >
+                This week
+              </div>
+
+              <div className="border-t my-2"></div>
+
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+                onClick={() => setShowDatePicker("custom")}
+              >
+                Choose dates…
+              </div>
+            </div>
+          )}
+
+          {/* Custom date picker */}
+          {showDatePicker === "custom" && (
             <div className="absolute z-20 bg-white shadow-lg rounded-lg p-4 mt-2 w-64">
               <label className="text-sm text-gray-600">From</label>
               <input
@@ -207,12 +256,12 @@ export default function HomePage() {
                 <div
                   key={index}
                   onClick={() => {
-                    setCity(item.formatted_name || item.city_name);
+                    setCity(item.description);
                     setSuggestions([]);
                   }}
                   className="p-3 hover:bg-gray-100 cursor-pointer text-gray-700"
                 >
-                  {item.formatted_name || item.city_name}
+                  {item.description}
                 </div>
               ))}
             </div>
