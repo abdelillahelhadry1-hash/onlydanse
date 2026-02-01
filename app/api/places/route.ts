@@ -10,15 +10,28 @@ export async function GET(req: Request) {
 
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
+  if (!apiKey) {
+    return NextResponse.json(
+      { error: "Missing Google Maps API key" },
+      { status: 500 }
+    );
+  }
+
   const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
     input
   )}&types=(cities)&key=${apiKey}`;
 
-  const res = await fetch(url);
-  const data = await res.json();
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
 
-  return NextResponse.json({
-    predictions: data.predictions || [],
-  });
+    return NextResponse.json({
+      predictions: data.predictions || [],
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to fetch from Google Places API" },
+      { status: 500 }
+    );
+  }
 }
-
