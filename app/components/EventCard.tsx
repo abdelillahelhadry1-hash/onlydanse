@@ -1,5 +1,3 @@
-// app/components/EventCard.tsx
-
 import Link from "next/link";
 
 export default function EventCard({ event }: { event: any }) {
@@ -19,19 +17,18 @@ export default function EventCard({ event }: { event: any }) {
       <h2 className="text-xl font-semibold">{event.name}</h2>
 
       <p className="text-gray-600 mt-1">
-        {event.cities.formatted_name}
+        {event.cities?.formatted_name}
       </p>
 
       <p className="text-gray-600">
-        {event.venues.name}
+        {event.venues?.name}
       </p>
 
       <p className="text-gray-800 font-medium mt-2">{start}</p>
 
       <p className="text-sm text-gray-500 mt-1">
-        {event.event_types.name} • {event.organizers.name}
+        {event.event_types?.name} • {event.organizers?.name}
       </p>
     </Link>
   );
 }
-
