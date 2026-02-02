@@ -1,13 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
 
-  // Fetch the event with all relations
   const { data, error } = await supabase
     .from("events")
     .select(
@@ -34,4 +33,3 @@ export async function GET(
 
   return NextResponse.json(data);
 }
-
