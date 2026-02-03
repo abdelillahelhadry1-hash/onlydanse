@@ -1,9 +1,7 @@
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
-  const { id } = await params;
+export async function generateMetadata(
+  props: { params: Promise<{ id: string }> }
+) {
+  const { id } = await props.params;
 
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${id}`;
   const res = await fetch(url, { cache: "no-store" });
@@ -21,5 +19,3 @@ export async function generateMetadata({
     description: event.description,
   };
 }
-
-
