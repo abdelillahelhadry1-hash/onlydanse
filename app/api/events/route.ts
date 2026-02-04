@@ -4,19 +4,40 @@ import { supabase } from "@/lib/supabaseClient";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
-  const city_id = searchParams.get("city_id");
+  let city_id = searchParams.get("city_id");
+  const cityName = searchParams.get("city"); // NEW
   const style_id = searchParams.get("style_id");
   const event_type_id = searchParams.get("event_type_id");
   const from = searchParams.get("from");
   const to = searchParams.get("to");
 
+  // If city_id is missing but city name is provided → convert it
+  if (!city_id && cityName) {
+    const { data: cityData, error: cityError } = await supabase
+      .from("cities")
+      .select("id")
+      .ilike("formatted_name", cityName) // case-insensitive match
+      .single();
+
+    if (cityError || !cityData) {
+      return NextResponse.json(
+        { error: "City not found" },
+        { status: 404 }
+      );
+    }
+
+    city_id = cityData.id;
+  }
+
+  // Still no city_id? Then we cannot continue
   if (!city_id) {
     return NextResponse.json(
-      { error: "city_id is required" },
+      { error: "city_id or city is required" },
       { status: 400 }
     );
   }
 
+  // Build the query
   let query = supabase
     .from("events")
     .select(
@@ -60,4 +81,3 @@ export async function GET(req: Request) {
 
   return NextResponse.json(data);
 }
-
