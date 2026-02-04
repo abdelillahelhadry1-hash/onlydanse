@@ -4,8 +4,10 @@ import { supabase } from "@/lib/supabaseClient";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
 
+  // Accept both city_id and city name
   let city_id = searchParams.get("city_id");
-  const cityName = searchParams.get("city"); // NEW
+  const cityName = searchParams.get("city");
+
   const style_id = searchParams.get("style_id");
   const event_type_id = searchParams.get("event_type_id");
   const from = searchParams.get("from");
@@ -16,7 +18,7 @@ export async function GET(req: Request) {
     const { data: cityData, error: cityError } = await supabase
       .from("cities")
       .select("id")
-      .ilike("formatted_name", cityName) // case-insensitive match
+      .ilike("formatted_name", `%${cityName}%`) // partial match fix
       .single();
 
     if (cityError || !cityData) {
