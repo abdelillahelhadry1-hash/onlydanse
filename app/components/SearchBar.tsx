@@ -12,7 +12,7 @@ export default function SearchBar() {
   const [showDatePicker, setShowDatePicker] = useState<false | "menu" | "custom">(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   const danceStyles = ["Bachata", "Salsa", "Kizomba", "Zouk", "Tango", "Ballroom", "Hip-Hop", "K-Pop", "Afro", "Other"];
@@ -73,11 +73,18 @@ export default function SearchBar() {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
+
     if (danceStyle) params.set("style", danceStyle);
     if (eventType) params.set("type", eventType);
-    if (city) params.set("city", city);
+
+    if (city) {
+      const normalizedCity = city.trim().toLowerCase();
+      params.set("city", normalizedCity);
+    }
+
     if (startDate) params.set("start", startDate);
     if (endDate) params.set("end", endDate);
+
     router.push(`/events?${params.toString()}`);
   };
 
@@ -121,17 +128,20 @@ export default function SearchBar() {
           {/* Quick menu */}
           {showDatePicker === "menu" && (
             <div className="absolute z-20 bg-white shadow-lg rounded-lg p-2 mt-2 w-48">
-              <div className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
                 onClick={() => {
                   const today = new Date().toISOString().split("T")[0];
                   setStartDate(today);
                   setEndDate(today);
                   setShowDatePicker(false);
-                }}>
+                }}
+              >
                 Today
               </div>
 
-              <div className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
                 onClick={() => {
                   const tomorrow = new Date();
                   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -139,11 +149,13 @@ export default function SearchBar() {
                   setStartDate(iso);
                   setEndDate(iso);
                   setShowDatePicker(false);
-                }}>
+                }}
+              >
                 Tomorrow
               </div>
 
-              <div className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
                 onClick={() => {
                   const today = new Date();
                   const nextWeek = new Date();
@@ -151,14 +163,17 @@ export default function SearchBar() {
                   setStartDate(today.toISOString().split("T")[0]);
                   setEndDate(nextWeek.toISOString().split("T")[0]);
                   setShowDatePicker(false);
-                }}>
+                }}
+              >
                 This week
               </div>
 
               <div className="border-t my-2"></div>
 
-              <div className="p-2 hover:bg-gray-100 cursor-pointer rounded"
-                onClick={() => setShowDatePicker("custom")}>
+              <div
+                className="p-2 hover:bg-gray-100 cursor-pointer rounded"
+                onClick={() => setShowDatePicker("custom")}
+              >
                 Choose dates…
               </div>
             </div>
