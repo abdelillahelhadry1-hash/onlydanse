@@ -35,7 +35,6 @@ export default function SearchBar({ compact = false }) {
     { name: "Festival", id: "festival" }
   ];
 
-  // Auto-detect city
   useEffect(() => {
     fetch("https://ipapi.co/json/")
       .then((res) => res.json())
@@ -43,7 +42,6 @@ export default function SearchBar({ compact = false }) {
       .catch(() => {});
   }, []);
 
-  // Default date range
   useEffect(() => {
     const today = new Date();
     const nextWeek = new Date();
@@ -53,7 +51,6 @@ export default function SearchBar({ compact = false }) {
     setTo(nextWeek.toISOString().split("T")[0]);
   }, []);
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -65,7 +62,6 @@ export default function SearchBar({ compact = false }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Google Places Autocomplete
   useEffect(() => {
     if (city.length < 2) {
       setSuggestions([]);
@@ -108,12 +104,11 @@ export default function SearchBar({ compact = false }) {
 
   return (
     <div
-      className="w-full border-b bg-white relative z-40 transition-all duration-300"
+      className="w-full border-b bg-white relative z-40 transition-all duration-300 overflow-visible"
       ref={dropdownRef}
     >
       <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col md:flex-row gap-3 items-center justify-center">
 
-        {/* Dance Style */}
         <select
           value={style_id}
           onChange={(e) => setStyleId(e.target.value)}
@@ -125,7 +120,6 @@ export default function SearchBar({ compact = false }) {
           ))}
         </select>
 
-        {/* Event Type */}
         <select
           value={event_type_id}
           onChange={(e) => setEventTypeId(e.target.value)}
@@ -137,7 +131,6 @@ export default function SearchBar({ compact = false }) {
           ))}
         </select>
 
-        {/* Date Picker */}
         <div className="relative w-full md:w-40 z-50">
           <button
             onClick={() => setShowDatePicker(showDatePicker === "menu" ? false : "menu")}
@@ -227,8 +220,7 @@ export default function SearchBar({ compact = false }) {
           )}
         </div>
 
-        {/* City Autocomplete */}
-        <div className="relative w-full md:w-40 z-50">
+        <div className="relative w-full md:w-40 z-50 overflow-visible">
           <input
             type="text"
             value={city}
@@ -255,7 +247,6 @@ export default function SearchBar({ compact = false }) {
           )}
         </div>
 
-        {/* Search Button */}
         <button
           onClick={handleSearch}
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold w-full md:w-auto"
