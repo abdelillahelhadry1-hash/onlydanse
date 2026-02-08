@@ -15,12 +15,16 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     <>
       <Header />
 
-      {/* Search bar: full on homepage, compact on other pages */}
-      <div className={isHome ? "mt-6" : "mt-2 scale-95 opacity-90"}>
-        <SearchBar />
+      {/* Animated SearchBar */}
+      <div
+        className={`transition-all duration-300 ${
+          isHome ? "mt-6 scale-100 opacity-100" : "mt-2 scale-90 opacity-90"
+        }`}
+      >
+        <SearchBar compact={!isHome} />
       </div>
 
-      {/* Category navigation always visible */}
+      {/* Sticky CategoryNav */}
       <CategoryNav />
 
       <main className="pt-10 px-4">
