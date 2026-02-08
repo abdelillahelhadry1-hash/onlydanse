@@ -6,7 +6,7 @@ import Header from "@/app/components/Header";
 import SearchBar from "@/app/components/SearchBar";
 import CategoryNav from "@/app/components/CategoryNav";
 import Footer from "@/app/components/Footer";
-import SearchModal from "@/app/components/SearchModal"; // ← ADD THIS
+import SearchModal from "@/app/components/SearchModal";
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,12 +15,14 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
   return (
     <>
       <Header />
-      <SearchModal /> {/* ← ADD THIS */}
+      <SearchModal />
 
       {/* Animated SearchBar */}
       <div
         className={`transition-all duration-300 ${
-          isHome ? "mt-6 scale-100 opacity-100" : "mt-2 scale-90 opacity-90"
+          isHome
+            ? "mt-6 scale-100 opacity-100"
+            : "mt-6 scale-95 opacity-95"   // ← FIXED: increased margin for compact mode
         }`}
       >
         <SearchBar compact={!isHome} />
