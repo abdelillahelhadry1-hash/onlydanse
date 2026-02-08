@@ -1,32 +1,30 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+"use client";
 
-import LayoutClient from "@/app/components/LayoutClient";
+import Link from "next/link";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export default function CategoryNav() {
+  const categories = [
+    { name: "Events", path: "/events" },
+    { name: "Classes", path: "/classes" },
+    { name: "Workshops", path: "/workshops" },
+    { name: "Festivals", path: "/festivals" },
+    { name: "Instructors", path: "/instructors" },
+    { name: "Studios", path: "/studios" },
+  ];
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "OnlyDanse",
-  description: "Find dance events worldwide",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50`}>
-        <LayoutClient>
-          {children}
-        </LayoutClient>
-      </body>
-    </html>
+    <nav className="w-full border-b bg-white">
+      <div className="mx-auto max-w-7xl px-6 py-3 flex gap-6 text-sm font-medium text-gray-700">
+        {categories.map((cat) => (
+          <Link
+            key={cat.name}
+            href={cat.path}
+            className="hover:text-black transition-colors"
+          >
+            {cat.name}
+          </Link>
+        ))}
+      </div>
+    </nav>
   );
 }
