@@ -58,6 +58,7 @@ export default function SearchBar({ compact = false }) {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setSuggestions([]);
+        setShowDatePicker(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -107,9 +108,10 @@ export default function SearchBar({ compact = false }) {
 
   return (
     <div
-      className={`w-full border-b bg-white transition-all duration-300 ${
-        compact ? "scale-90 opacity-90" : "scale-100 opacity-100"
+      className={`w-full border-b bg-white relative z-40 transition-all duration-300 ${
+        compact ? "scale-95 opacity-95" : "scale-100 opacity-100"
       }`}
+      ref={dropdownRef}
     >
       <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col md:flex-row gap-3 items-center justify-center">
 
@@ -147,7 +149,7 @@ export default function SearchBar({ compact = false }) {
           </button>
 
           {showDatePicker === "menu" && (
-            <div className="absolute z-20 bg-white shadow-lg rounded-lg p-2 mt-2 w-48">
+            <div className="absolute z-50 bg-white shadow-lg rounded-lg p-2 mt-2 w-48">
               <div
                 className="p-2 hover:bg-gray-100 cursor-pointer rounded"
                 onClick={() => {
@@ -200,7 +202,7 @@ export default function SearchBar({ compact = false }) {
           )}
 
           {showDatePicker === "custom" && (
-            <div className="absolute z-20 bg-white shadow-lg rounded-lg p-4 mt-2 w-64">
+            <div className="absolute z-50 bg-white shadow-lg rounded-lg p-4 mt-2 w-64">
               <label className="text-sm text-gray-600">From</label>
               <input
                 type="date"
@@ -228,7 +230,7 @@ export default function SearchBar({ compact = false }) {
         </div>
 
         {/* City Autocomplete */}
-        <div className="relative w-full md:w-40" ref={dropdownRef}>
+        <div className="relative w-full md:w-40">
           <input
             type="text"
             value={city}
@@ -238,7 +240,7 @@ export default function SearchBar({ compact = false }) {
           />
 
           {suggestions.length > 0 && (
-            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg mt-1 z-30">
+            <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg mt-1 z-50">
               {suggestions.map((item: any, index: number) => (
                 <div
                   key={index}
