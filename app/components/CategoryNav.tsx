@@ -16,7 +16,7 @@ export default function CategoryNav() {
   ];
 
   return (
-    <nav className="w-full border-b bg-white sticky top-0 z-30 mb-6">
+    <nav className="w-full border-b bg-white sticky top-0 z-30 mt-8">
       <div className="mx-auto max-w-7xl px-6 h-14 flex items-center justify-center gap-6 overflow-x-auto">
         {categories.map((cat) => {
           const active = pathname.startsWith(cat.href);
