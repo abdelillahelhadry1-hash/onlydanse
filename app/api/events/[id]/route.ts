@@ -3,9 +3,9 @@ import { supabase } from "@/lib/supabaseClient";
 
 export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
-  const { id } = await context.params;
+  const { id } = params;
 
   const { data, error } = await supabase
     .from("events")
@@ -26,7 +26,7 @@ export async function GET(
     .eq("id", id)
     .single();
 
-  if (error) {
+  if (error || !data) {
     console.error("Error fetching event:", error);
     return NextResponse.json({ error: "Event not found" }, { status: 404 });
   }
