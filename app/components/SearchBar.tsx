@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-export default function SearchBar() {
+export default function SearchBar({ compact = false }) {
   const router = useRouter();
 
   const [city, setCity] = useState("");
@@ -106,7 +106,11 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="w-full border-b bg-white">
+    <div
+      className={`w-full border-b bg-white transition-all duration-300 ${
+        compact ? "scale-90 opacity-90" : "scale-100 opacity-100"
+      }`}
+    >
       <div className="mx-auto max-w-7xl px-6 py-4 flex flex-col md:flex-row gap-3 items-center justify-center">
 
         {/* Dance Style */}
