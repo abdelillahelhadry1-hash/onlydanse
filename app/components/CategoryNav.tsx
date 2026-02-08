@@ -1,3 +1,5 @@
+// app/components/CategoryNav.tsx
+
 "use client";
 
 import Link from "next/link";
@@ -13,7 +15,7 @@ export default function CategoryNav() {
   ];
 
   return (
-    <nav className="w-full border-b bg-white">
+    <nav className="w-full border-b bg-white sticky top-0 z-30">
       <div className="mx-auto max-w-7xl px-6 py-3 flex gap-6 text-sm font-medium text-gray-700">
         {categories.map((cat) => (
           <Link
