@@ -15,12 +15,13 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
     <>
       <Header />
 
-      {isHome && (
-        <>
-          <SearchBar />
-          <CategoryNav />
-        </>
-      )}
+      {/* Search bar: full on homepage, compact on other pages */}
+      <div className={isHome ? "mt-6" : "mt-2 scale-95 opacity-90"}>
+        <SearchBar />
+      </div>
+
+      {/* Category navigation always visible */}
+      <CategoryNav />
 
       <main className="pt-10 px-4">
         {children}
