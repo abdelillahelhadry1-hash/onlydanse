@@ -1,8 +1,6 @@
 // app/events/[id]/page.tsx
 
-export async function generateMetadata(
-  props: { params: { id: string } }
-) {
+export async function generateMetadata(props: { params: { id: string } }) {
   const { id } = props.params;
 
   const url = `/api/events/${id}`;
@@ -46,20 +44,19 @@ export default async function EventDetailPage({
     );
   }
 
-  const start = new Date(event.start_time).toLocaleString("en-US", {
+  const start = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
     month: "long",
     day: "numeric",
     hour: "numeric",
     minute: "numeric",
-  });
+  }).format(new Date(event.start_time));
 
-  const end = new Date(event.end_time).toLocaleString("en-US", {
+  const end = new Intl.DateTimeFormat("en-US", {
     hour: "numeric",
     minute: "numeric",
-  });
+  }).format(new Date(event.end_time));
 
-  // SAFE hero image
   const heroImage =
     Array.isArray(event.event_images) &&
     event.event_images.length > 0 &&
