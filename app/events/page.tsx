@@ -14,13 +14,10 @@ export default async function EventsPage({
     category?: string;
   };
 }) {
-  // Extract filters from URL
   const { style, type, city, start, end, category } = searchParams;
 
-  // Normalize city (defensive, in case someone hits URL manually)
   const normalizedCity = city ? city.trim().toLowerCase() : undefined;
 
-  // Build query string dynamically
   const params = new URLSearchParams();
 
   if (style) params.set("style", style);
@@ -30,7 +27,8 @@ export default async function EventsPage({
   if (start) params.set("start", start);
   if (end) params.set("end", end);
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/events?${params.toString()}`;
+  // ✅ FIX: Use relative URL (works on Vercel, local, preview)
+  const url = `/api/events?${params.toString()}`;
 
   let events: any[] = [];
 
