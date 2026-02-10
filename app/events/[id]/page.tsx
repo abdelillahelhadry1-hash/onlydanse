@@ -1,23 +1,39 @@
 // app/events/[id]/page.tsx
 
-export async function generateMetadata(props: { params: { id: string } }) {
+import type { Metadata } from "next";
+
+export async function generateMetadata(
+  props: { params: { id: string } }
+): Promise<Metadata> {
   const { id } = props.params;
 
-  const url = `/api/events/${id}`;
-  const res = await fetch(url, { cache: "no-store" });
-  const event = res.ok ? await res.json() : null;
+  // ✅ Use absolute URL + try/catch so metadata never crashes the route
+  const base =
+    process.env.NEXT_PUBLIC_BASE_URL ?? "https://onlydanse.com";
+  const url = `${base}/api/events/${id}`;
 
-  if (!event) {
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) {
+      return {
+        title: "Event not found | OnlyDanse",
+        description: "The event you're looking for doesn't exist.",
+      };
+    }
+
+    const event = await res.json();
+
     return {
-      title: "Event not found | OnlyDanse",
-      description: "The event you're looking for doesn't exist.",
+      title: `${event.name} | OnlyDanse`,
+      description: event.description ?? "",
+    };
+  } catch {
+    // If anything goes wrong, fall back instead of crashing the page
+    return {
+      title: "Event | OnlyDanse",
+      description: "Discover dance events worldwide.",
     };
   }
-
-  return {
-    title: `${event.name} | OnlyDanse`,
-    description: event.description ?? "",
-  };
 }
 
 export default async function EventDetailPage({
@@ -73,7 +89,7 @@ export default async function EventDetailPage({
       </div>
 
       <div
-        className="w-full h-64 bg-cover bg-center flex items-end"
+        className="w-full h-64 bg-cover bg-center flex items.end"
         style={{
           backgroundImage: heroImage
             ? `url(${heroImage})`
