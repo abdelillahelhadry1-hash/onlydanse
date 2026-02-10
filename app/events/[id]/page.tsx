@@ -1,12 +1,11 @@
 // app/events/[id]/page.tsx
 
-// Correctly typed metadata function
 export async function generateMetadata(
   props: { params: { id: string } }
 ) {
   const { id } = props.params;
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${id}`;
+  const url = `/api/events/${id}`;
   const res = await fetch(url, { cache: "no-store" });
   const event = res.ok ? await res.json() : null;
 
@@ -23,7 +22,6 @@ export async function generateMetadata(
   };
 }
 
-// Correctly typed page component
 export default async function EventDetailPage({
   params,
 }: {
@@ -31,7 +29,7 @@ export default async function EventDetailPage({
 }) {
   const { id } = params;
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${id}`;
+  const url = `/api/events/${id}`;
   const res = await fetch(url, { cache: "no-store" });
   const event = res.ok ? await res.json() : null;
 
@@ -64,14 +62,12 @@ export default async function EventDetailPage({
 
   return (
     <div className="pb-20">
-      {/* Back link */}
       <div className="max-w-3xl mx-auto py-6">
         <a href="/events" className="text-blue-600 hover:underline">
           ← Back to events
         </a>
       </div>
 
-      {/* Hero Section */}
       <div
         className="w-full h-64 bg-cover bg-center flex items-end"
         style={{
@@ -88,7 +84,6 @@ export default async function EventDetailPage({
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-3xl mx-auto py-10 space-y-6">
         <p className="text-gray-700">{event.description}</p>
 
@@ -118,7 +113,6 @@ export default async function EventDetailPage({
           </p>
         </div>
 
-        {/* Styles */}
         {event.event_styles?.length > 0 && (
           <div>
             <h2 className="text-xl font-semibold mb-2">Styles</h2>
@@ -135,7 +129,6 @@ export default async function EventDetailPage({
           </div>
         )}
 
-        {/* Image Gallery */}
         {event.event_images?.length > 1 && (
           <div>
             <h2 className="text-xl font-semibold mb-2">Images</h2>
@@ -152,7 +145,6 @@ export default async function EventDetailPage({
           </div>
         )}
 
-        {/* Map */}
         {event.venues?.lat && event.venues?.lng && (
           <div>
             <h2 className="text-xl font-semibold mb-2">Location</h2>
