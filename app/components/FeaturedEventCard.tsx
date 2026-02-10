@@ -1,6 +1,11 @@
 import Link from "next/link";
 
 export default function FeaturedEventCard({ event }: { event: any }) {
+  const date = new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+  }).format(new Date(event.start_time));
+
   return (
     <Link
       href={`/events/${event.id}`}
@@ -11,7 +16,7 @@ export default function FeaturedEventCard({ event }: { event: any }) {
         {event.cities?.formatted_name}
       </p>
       <p className="text-gray-500 text-sm mt-2">
-        {new Date(event.start_time).toLocaleDateString()}
+        {date}
       </p>
     </Link>
   );
