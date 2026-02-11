@@ -6,18 +6,28 @@ import FeaturedProductCard from "./components/FeaturedProductCard";
 import FeaturedBlogCard from "./components/FeaturedBlogCard";
 
 async function getEvents(city: string) {
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/events?city=${city}`;
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) return [];
-  return res.json();
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+  const url = `${base}/api/events?city=${city}`;
+
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return [];
+
+    const data = await res.json();
+
+    // ⭐ CRITICAL: filter out events with missing IDs
+    return Array.isArray(data) ? data.filter((e) => e?.id) : [];
+  } catch (err) {
+    console.error("Error fetching events:", err);
+    return [];
+  }
 }
 
 export default async function HomePage() {
-  // For now, hardcode; later: use IP-based city
   const city = "Toronto";
   const events = await getEvents(city);
 
-  // Temporary mock data for other rails
+  // Temporary mock data
   const instructors = [
     { id: "i1", name: "Test Instructor" },
     { id: "i2", name: "Another Instructor" },
@@ -34,23 +44,30 @@ export default async function HomePage() {
   ];
 
   const posts = [
-    { slug: "how-to-choose-your-dance-style", title: "How to Choose Your Dance Style", excerpt: "A quick guide to finding your groove." },
-    { slug: "5-festivals-you-cant-miss", title: "5 Festivals You Can’t Miss", excerpt: "From Europe to Latin America, here’s where to go." },
+    {
+      slug: "how-to-choose-your-dance-style",
+      title: "How to Choose Your Dance Style",
+      excerpt: "A quick guide to finding your groove.",
+    },
+    {
+      slug: "5-festivals-you-cant-miss",
+      title: "5 Festivals You Can’t Miss",
+      excerpt: "From Europe to Latin America, here’s where to go.",
+    },
   ];
 
   return (
     <div className="pb-10">
-      <HorizontalScroller
-        title={`Trending events near you`}
-        seeAllHref="/events"
-      >
-        {events.map((event: any) => (
-          <FeaturedEventCard key={event.id} event={event} />
-        ))}
+      <HorizontalScroller title="Trending events near you" seeAllHref="/events">
+        {events
+          .filter((e) => e?.id)
+          .map((event: any) => (
+            <FeaturedEventCard key={event.id} event={event} />
+          ))}
       </HorizontalScroller>
 
       <HorizontalScroller
-        title={`Popular dance styles in your city`}
+        title="Popular dance styles in your city"
         seeAllHref="/classes"
       >
         <div className="min-w-[200px] bg-white rounded-xl shadow p-4">Salsa</div>
@@ -59,12 +76,15 @@ export default async function HomePage() {
       </HorizontalScroller>
 
       <HorizontalScroller
-        title={`Upcoming festivals this month`}
+        title="Upcoming festivals this month"
         seeAllHref="/festivals"
       >
-        {events.slice(0, 5).map((event: any) => (
-          <FeaturedEventCard key={event.id} event={event} />
-        ))}
+        {events
+          .filter((e) => e?.id)
+          .slice(0, 5)
+          .map((event: any) => (
+            <FeaturedEventCard key={event.id} event={event} />
+          ))}
       </HorizontalScroller>
 
       <HorizontalScroller
@@ -72,17 +92,11 @@ export default async function HomePage() {
         seeAllHref="/instructors"
       >
         {instructors.map((instructor) => (
-          <FeaturedInstructorCard
-            key={instructor.id}
-            instructor={instructor}
-          />
+          <FeaturedInstructorCard key={instructor.id} instructor={instructor} />
         ))}
       </HorizontalScroller>
 
-      <HorizontalScroller
-        title="Studios you might like"
-        seeAllHref="/studios"
-      >
+      <HorizontalScroller title="Studios you might like" seeAllHref="/studios">
         {studios.map((studio) => (
           <FeaturedStudioCard key={studio.id} studio={studio} />
         ))}
@@ -92,24 +106,21 @@ export default async function HomePage() {
         title="Events similar to your search history"
         seeAllHref="/events"
       >
-        {events.slice(0, 5).map((event: any) => (
-          <FeaturedEventCard key={event.id} event={event} />
-        ))}
+        {events
+          .filter((e) => e?.id)
+          .slice(0, 5)
+          .map((event: any) => (
+            <FeaturedEventCard key={event.id} event={event} />
+          ))}
       </HorizontalScroller>
 
-      <HorizontalScroller
-        title="Trending dancing gear"
-        seeAllHref="/shop"
-      >
+      <HorizontalScroller title="Trending dancing gear" seeAllHref="/shop">
         {products.map((product) => (
           <FeaturedProductCard key={product.id} product={product} />
         ))}
       </HorizontalScroller>
 
-      <HorizontalScroller
-        title="Handpicked blog posts"
-        seeAllHref="/blog"
-      >
+      <HorizontalScroller title="Handpicked blog posts" seeAllHref="/blog">
         {posts.map((post) => (
           <FeaturedBlogCard key={post.slug} post={post} />
         ))}
