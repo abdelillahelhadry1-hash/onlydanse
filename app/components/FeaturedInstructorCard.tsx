@@ -1,6 +1,9 @@
 import Link from "next/link";
 
 export default function FeaturedInstructorCard({ instructor }: { instructor: any }) {
+  // ⭐ Prevent broken links like /instructors/undefined
+  if (!instructor?.id) return null;
+
   return (
     <Link
       href={`/instructors/${instructor.id}`}
