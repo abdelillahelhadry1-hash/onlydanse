@@ -1,7 +1,10 @@
 import Link from "next/link";
 
 export default function EventCard({ event }: { event: any }) {
-  // ✅ FIX: Server‑safe date formatting (Intl works on Vercel)
+  // ⭐ Prevent rendering broken events (the real cause of /events/undefined)
+  if (!event?.id) return null;
+
+  // ⭐ Safe date formatting
   const start = new Intl.DateTimeFormat("en-US", {
     weekday: "short",
     month: "short",
