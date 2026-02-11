@@ -7,9 +7,14 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { id } = props.params;
 
-  // ✅ Use absolute URL + try/catch so metadata never crashes the route
-  const base =
-    process.env.NEXT_PUBLIC_BASE_URL ?? "https://onlydanse.com";
+  if (!id || id === "undefined") {
+    return {
+      title: "Invalid event | OnlyDanse",
+      description: "The event ID is missing or invalid.",
+    };
+  }
+
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "https://onlydanse.com";
   const url = `${base}/api/events/${id}`;
 
   try {
@@ -28,7 +33,6 @@ export async function generateMetadata(
       description: event.description ?? "",
     };
   } catch {
-    // If anything goes wrong, fall back instead of crashing the page
     return {
       title: "Event | OnlyDanse",
       description: "Discover dance events worldwide.",
@@ -43,11 +47,23 @@ export default async function EventDetailPage({
 }) {
   const { id } = params;
 
-  const url = `/api/events/${id}`;
+  // ⭐ Prevent the crash BEFORE fetching
+  if (!id || id === "undefined") {
+    return (
+      <div className="max-w-3xl mx-auto py-10">
+        <h1 className="text-2xl font-semibold">Invalid event</h1>
+        <p className="text-gray-500 mt-2">
+          The event ID is missing or invalid.
+        </p>
+      </div>
+    );
+  }
+
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "https://onlydanse.com";
+  const url = `${base}/api/events/${id}`;
+
   const res = await fetch(url, { cache: "no-store" });
   const event = res.ok ? await res.json() : null;
-
-  console.log("EVENT DATA:", event);
 
   if (!event) {
     return (
@@ -185,3 +201,4 @@ export default async function EventDetailPage({
     </div>
   );
 }
+
