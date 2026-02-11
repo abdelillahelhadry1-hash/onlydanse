@@ -1,6 +1,9 @@
 import Link from "next/link";
 
 export default function FeaturedStudioCard({ studio }: { studio: any }) {
+  // ⭐ Prevent broken links like /studios/undefined
+  if (!studio?.id) return null;
+
   return (
     <Link
       href={`/studios/${studio.id}`}
