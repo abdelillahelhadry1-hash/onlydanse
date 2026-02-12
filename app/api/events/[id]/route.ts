@@ -1,15 +1,13 @@
-// app/api/events/[id]/route.ts
-
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { supabase } from "@/lib/supabaseClient";
 
 export async function GET(
-  req: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
+  const { id } = params;
 
-  // ⭐ CRITICAL: Prevent UUID errors
+  // ⭐ Prevent UUID errors
   if (!id || id === "undefined" || id === "null") {
     return NextResponse.json(
       { error: "Invalid event ID" },
@@ -17,7 +15,7 @@ export async function GET(
     );
   }
 
-  // ⭐ Optional: Validate UUID format (extra safety)
+  // ⭐ Optional: UUID format validation
   const uuidRegex =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
