@@ -37,15 +37,16 @@ export default function Header() {
             Search
           </button>
 
+          {/* Updated Auth Links */}
           <Link
-            href="/login"
+            href="/auth"
             className="text-sm font-medium text-gray-700 hover:text-black transition-colors"
           >
             Login
           </Link>
 
           <Link
-            href="/signup"
+            href="/auth"
             className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-900 transition-colors"
           >
             Sign Up
