@@ -21,7 +21,7 @@ export default function AuthPage() {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}/dashboard`,
       },
     });
   }
@@ -34,16 +34,28 @@ export default function AuthPage() {
         email,
         password,
       });
+
       if (error) return setError(error.message);
-    } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      });
-      if (error) return setError(error.message);
+
+      router.push("/dashboard");
+      return;
     }
 
-    router.push("/");
+    // SIGNUP FLOW
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) return setError(error.message);
+
+    // Send custom confirmation email
+    await fetch("/api/auth/send-confirmation", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
+
+    router.push("/auth/check-email");
   }
 
   return (
@@ -132,4 +144,3 @@ export default function AuthPage() {
     </div>
   );
 }
-
