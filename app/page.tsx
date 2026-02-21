@@ -1,3 +1,7 @@
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
 import HorizontalScroller from "./components/HorizontalScroller";
 import FeaturedEventCard from "./components/FeaturedEventCard";
 import FeaturedInstructorCard from "./components/FeaturedInstructorCard";
@@ -14,8 +18,6 @@ async function getEvents(city: string) {
     if (!res.ok) return [];
 
     const data = await res.json();
-
-    // ⭐ CRITICAL: filter out events with missing IDs
     return Array.isArray(data) ? data.filter((e) => e?.id) : [];
   } catch (err) {
     console.error("Error fetching events:", err);
@@ -24,10 +26,20 @@ async function getEvents(city: string) {
 }
 
 export default async function HomePage() {
+  const supabase = createServerComponentClient({ cookies });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  // ⭐ If logged in → redirect to dashboard
+  if (session) {
+    redirect("/dashboard");
+  }
+
   const city = "Toronto";
   const events = await getEvents(city);
 
-  // Temporary mock data
   const instructors = [
     { id: "i1", name: "Test Instructor" },
     { id: "i2", name: "Another Instructor" },
@@ -59,11 +71,9 @@ export default async function HomePage() {
   return (
     <div className="pb-10">
       <HorizontalScroller title="Trending events near you" seeAllHref="/events">
-        {events
-          .filter((e) => e?.id)
-          .map((event: any) => (
-            <FeaturedEventCard key={event.id} event={event} />
-          ))}
+        {events.map((event: any) => (
+          <FeaturedEventCard key={event.id} event={event} />
+        ))}
       </HorizontalScroller>
 
       <HorizontalScroller
@@ -79,12 +89,9 @@ export default async function HomePage() {
         title="Upcoming festivals this month"
         seeAllHref="/festivals"
       >
-        {events
-          .filter((e) => e?.id)
-          .slice(0, 5)
-          .map((event: any) => (
-            <FeaturedEventCard key={event.id} event={event} />
-          ))}
+        {events.slice(0, 5).map((event: any) => (
+          <FeaturedEventCard key={event.id} event={event} />
+        ))}
       </HorizontalScroller>
 
       <HorizontalScroller
@@ -106,12 +113,9 @@ export default async function HomePage() {
         title="Events similar to your search history"
         seeAllHref="/events"
       >
-        {events
-          .filter((e) => e?.id)
-          .slice(0, 5)
-          .map((event: any) => (
-            <FeaturedEventCard key={event.id} event={event} />
-          ))}
+        {events.slice(0, 5).map((event: any) => (
+          <FeaturedEventCard key={event.id} event={event} />
+        ))}
       </HorizontalScroller>
 
       <HorizontalScroller title="Trending dancing gear" seeAllHref="/shop">
