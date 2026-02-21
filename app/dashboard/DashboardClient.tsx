@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import DancerDashboard from "./dancer/DancerDashboard";
+import { DancerDashboard } from "./dancer/DancerDashboard";
 
 export default function DashboardClient({
   user,
@@ -56,7 +56,6 @@ export default function DashboardClient({
         </div>
       )}
 
-      {/* For now, only dancer role is implemented */}
       {activeRole === "dancer" && <DancerDashboard />}
     </div>
   );
