@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-export default function DashboardClient({ user, roles }) {
+export default function DashboardClient({
+  user,
+  roles,
+}: {
+  user: any;
+  roles: string[];
+}) {
   const [activeRole, setActiveRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -57,49 +63,4 @@ export default function DashboardClient({ user, roles }) {
   );
 }
 
-/* ROLE-SPECIFIC DASHBOARDS */
-
-function DancerDashboard() {
-  return (
-    <div className="p-4 border rounded">
-      <h2 className="text-xl font-semibold mb-2">Dancer Dashboard</h2>
-      <p>Discover events, follow instructors, and explore your dance world.</p>
-    </div>
-  );
-}
-
-function InstructorDashboard() {
-  return (
-    <div className="p-4 border rounded">
-      <h2 className="text-xl font-semibold mb-2">Instructor Dashboard</h2>
-      <p>Manage your classes, workshops, and students.</p>
-      <button className="mt-4 px-4 py-2 bg-black text-white rounded">
-        Create a class
-      </button>
-    </div>
-  );
-}
-
-function StudioDashboard() {
-  return (
-    <div className="p-4 border rounded">
-      <h2 className="text-xl font-semibold mb-2">Studio Dashboard</h2>
-      <p>Manage your studio, instructors, and events.</p>
-      <button className="mt-4 px-4 py-2 bg-black text-white rounded">
-        Create a workshop
-      </button>
-    </div>
-  );
-}
-
-function OrganizerDashboard() {
-  return (
-    <div className="p-4 border rounded">
-      <h2 className="text-xl font-semibold mb-2">Organizer Dashboard</h2>
-      <p>Manage your festivals, socials, and event promotions.</p>
-      <button className="mt-4 px-4 py-2 bg-black text-white rounded">
-        Create a festival
-      </button>
-    </div>
-  );
-}
+/* ROLE-SPECIFIC DASHBOARDS BELOW… */
