@@ -1,0 +1,105 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+export default function DashboardClient({ user, roles }) {
+  const [activeRole, setActiveRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!roles || roles.length === 0) {
+      window.location.href = "/onboarding/step3-roles";
+      return;
+    }
+
+    const saved = localStorage.getItem("activeRole");
+
+    if (saved && roles.includes(saved)) {
+      setActiveRole(saved);
+    } else {
+      setActiveRole(roles[0]);
+    }
+  }, [roles]);
+
+  function switchRole(role: string) {
+    setActiveRole(role);
+    localStorage.setItem("activeRole", role);
+  }
+
+  if (!activeRole) {
+    return <div className="p-6">Loading dashboard...</div>;
+  }
+
+  return (
+    <div className="p-6 space-y-6">
+      <h1 className="text-3xl font-semibold">Dashboard</h1>
+
+      {roles.length > 1 && (
+        <div className="flex gap-3">
+          {roles.map((role) => (
+            <button
+              key={role}
+              onClick={() => switchRole(role)}
+              className={`px-4 py-2 rounded border ${
+                activeRole === role ? "bg-black text-white" : "bg-white"
+              }`}
+            >
+              {role.charAt(0).toUpperCase() + role.slice(1)}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {activeRole === "dancer" && <DancerDashboard />}
+      {activeRole === "instructor" && <InstructorDashboard />}
+      {activeRole === "studio" && <StudioDashboard />}
+      {activeRole === "organizer" && <OrganizerDashboard />}
+    </div>
+  );
+}
+
+/* ROLE-SPECIFIC DASHBOARDS */
+
+function DancerDashboard() {
+  return (
+    <div className="p-4 border rounded">
+      <h2 className="text-xl font-semibold mb-2">Dancer Dashboard</h2>
+      <p>Discover events, follow instructors, and explore your dance world.</p>
+    </div>
+  );
+}
+
+function InstructorDashboard() {
+  return (
+    <div className="p-4 border rounded">
+      <h2 className="text-xl font-semibold mb-2">Instructor Dashboard</h2>
+      <p>Manage your classes, workshops, and students.</p>
+      <button className="mt-4 px-4 py-2 bg-black text-white rounded">
+        Create a class
+      </button>
+    </div>
+  );
+}
+
+function StudioDashboard() {
+  return (
+    <div className="p-4 border rounded">
+      <h2 className="text-xl font-semibold mb-2">Studio Dashboard</h2>
+      <p>Manage your studio, instructors, and events.</p>
+      <button className="mt-4 px-4 py-2 bg-black text-white rounded">
+        Create a workshop
+      </button>
+    </div>
+  );
+}
+
+function OrganizerDashboard() {
+  return (
+    <div className="p-4 border rounded">
+      <h2 className="text-xl font-semibold mb-2">Organizer Dashboard</h2>
+      <p>Manage your festivals, socials, and event promotions.</p>
+      <button className="mt-4 px-4 py-2 bg-black text-white rounded">
+        Create a festival
+      </button>
+    </div>
+  );
+}
