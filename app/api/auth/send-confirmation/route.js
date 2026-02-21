@@ -12,7 +12,7 @@ export async function POST(req) {
   // Generate confirmation link
   const { data, error } = await supabase.auth.admin.generateLink({
     type: "signup",
-    email,
+    email
   });
 
   if (error) {
@@ -24,7 +24,7 @@ export async function POST(req) {
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       from: "OnlyDanse <no-reply@onlydanse.com>",
@@ -39,8 +39,8 @@ export async function POST(req) {
              Confirm Email
           </a>
         </div>
-      `,
-    }),
+      `
+    })
   });
 
   return NextResponse.json({ success: true });
