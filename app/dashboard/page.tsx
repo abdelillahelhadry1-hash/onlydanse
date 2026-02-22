@@ -1,7 +1,7 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import DashboardClient from "./DashboardClient";
+import DashboardWrapper from "./DashboardWrapper";
 
 export default async function DashboardPage() {
   const supabase = createServerComponentClient({ cookies });
@@ -23,10 +23,7 @@ export default async function DashboardPage() {
     .select("role")
     .eq("user_id", user.id);
 
-  return (
-    <DashboardClient
-      user={user}
-      roles={userRoles?.map((r) => r.role) ?? []}
-    />
-  );
+  const roles = userRoles?.map((r) => r.role) ?? [];
+
+  return <DashboardWrapper user={user} roles={roles} />;
 }
