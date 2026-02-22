@@ -12,20 +12,25 @@ export default function DashboardClient({
 }) {
   const [activeRole, setActiveRole] = useState<string | null>(null);
 
+  // Normalize roles to be safe
+  const safeRoles = Array.isArray(roles)
+    ? roles.filter((r) => typeof r === "string")
+    : [];
+
   useEffect(() => {
-    if (!roles || roles.length === 0) {
+    if (!safeRoles || safeRoles.length === 0) {
       window.location.href = "/onboarding/step3-roles";
       return;
     }
 
     const saved = localStorage.getItem("activeRole");
 
-    if (saved && roles.includes(saved)) {
+    if (saved && safeRoles.includes(saved)) {
       setActiveRole(saved);
     } else {
-      setActiveRole(roles[0]);
+      setActiveRole(safeRoles[0]);
     }
-  }, [roles]);
+  }, [safeRoles]);
 
   function switchRole(role: string) {
     setActiveRole(role);
@@ -40,9 +45,9 @@ export default function DashboardClient({
     <div className="p-6 space-y-6">
       <h1 className="text-3xl font-semibold">Dashboard</h1>
 
-      {roles.length > 1 && (
+      {safeRoles.length > 1 && (
         <div className="flex gap-3">
-          {roles.map((role) => (
+          {safeRoles.map((role) => (
             <button
               key={role}
               onClick={() => switchRole(role)}
