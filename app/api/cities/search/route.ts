@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabaseClient";
+import { createSupabaseClient } from "@/lib/supabaseClient";
 import { normalizeCity } from "@/lib/normalizeCity";
 import { aliasMap } from "@/lib/aliasMap";
 import { fuzzyMatch } from "@/lib/fuzzyMatch";
@@ -6,6 +6,8 @@ import { getGooglePlace } from "@/lib/googlePlaces";
 import { formatCity } from "@/lib/formatCity";
 
 export async function GET(req: Request) {
+  const supabase = createSupabaseClient();
+
   const { searchParams } = new URL(req.url);
   const raw = searchParams.get("q") || "";
   const normalized = normalizeCity(raw);
