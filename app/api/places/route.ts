@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { createSupabaseClient } from "@/lib/supabaseClient";
 import { formatCity } from "@/lib/formatCity";
 
 export async function GET(req: Request) {
+  const supabase = createSupabaseClient();
+
   const { searchParams } = new URL(req.url);
   const input = searchParams.get("input");
 
