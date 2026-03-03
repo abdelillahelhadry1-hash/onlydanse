@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabaseClient";
+import { createSupabaseClient } from "@/lib/supabaseClient";
 
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  const supabase = createSupabaseClient();
+
   // ⭐ Next.js 16 requires awaiting params
   const { id } = await context.params;
 
