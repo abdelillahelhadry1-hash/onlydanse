@@ -1,7 +1,9 @@
-import { supabase } from "@/lib/supabaseClient";
+import { createSupabaseClient } from "@/lib/supabaseClient";
 import { formatCity } from "@/lib/formatCity";
 
 export async function POST(req: Request) {
+  const supabase = createSupabaseClient();
+
   const body = await req.json();
   const { city, state, country, lat, lng, google_place_id } = body;
 
