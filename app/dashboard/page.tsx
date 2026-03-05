@@ -1,23 +1,12 @@
-import { createServerClient } from "@supabase/auth-helpers-nextjs";
+export const dynamic = "force-dynamic";
+
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import DashboardWrapper from "./DashboardWrapper";
 
 export default async function DashboardPage() {
-  const cookieStore = cookies();
-
-  // NEW API: requires 3 arguments (supabaseUrl, supabaseKey, options)
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
-        },
-      },
-    }
-  );
+  const supabase = createServerComponentClient({ cookies });
 
   const {
     data: { session },
