@@ -28,5 +28,19 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  return <DashboardWrapper user={user} />;
+  // Fetch user roles
+  const { data: rolesData } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id);
+
+  const roles = Array.isArray(rolesData)
+    ? rolesData.map((r) => r.role).filter(Boolean)
+    : [];
+
+  if (!roles || roles.length === 0) {
+    redirect("/onboarding/step3-roles");
+  }
+
+  return <DashboardWrapper user={user} roles={roles} />;
 }
