@@ -12,10 +12,18 @@ export default function DashboardClient({
 }) {
   const [activeRole, setActiveRole] = useState<string | null>(null);
 
-  // Normalize roles to be safe
+  // Normalize roles safely
   const safeRoles = Array.isArray(roles)
     ? roles.filter((r) => typeof r === "string")
     : [];
+
+  // Map roles to dashboards (easy to extend later)
+  const dashboards: Record<string, JSX.Element> = {
+    dancer: <DancerDashboard />,
+    // instructor: <InstructorDashboard />,
+    // studio: <StudioDashboard />,
+    // organizer: <OrganizerDashboard />,
+  };
 
   useEffect(() => {
     if (!safeRoles || safeRoles.length === 0) {
@@ -51,8 +59,10 @@ export default function DashboardClient({
             <button
               key={role}
               onClick={() => switchRole(role)}
-              className={`px-4 py-2 rounded border ${
-                activeRole === role ? "bg-black text-white" : "bg-white"
+              className={`px-4 py-2 rounded border transition ${
+                activeRole === role
+                  ? "bg-black text-white border-black"
+                  : "bg-white text-black border-gray-300 hover:bg-gray-100"
               }`}
             >
               {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -61,7 +71,12 @@ export default function DashboardClient({
         </div>
       )}
 
-      {activeRole === "dancer" && <DancerDashboard />}
+      {/* Render the correct dashboard */}
+      {dashboards[activeRole] ?? (
+        <div className="text-red-500">
+          No dashboard implemented for role: {activeRole}
+        </div>
+      )}
     </div>
   );
 }
