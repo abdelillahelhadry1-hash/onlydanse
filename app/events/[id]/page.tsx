@@ -1,4 +1,5 @@
-// app/events/[id]/page.tsx
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 import type { Metadata } from "next";
 
@@ -47,7 +48,6 @@ export default async function EventDetailPage({
 }) {
   const { id } = params;
 
-  // ⭐ Prevent the crash BEFORE fetching
   if (!id || id === "undefined") {
     return (
       <div className="max-w-3xl mx-auto py-10">
@@ -201,4 +201,3 @@ export default async function EventDetailPage({
     </div>
   );
 }
-
