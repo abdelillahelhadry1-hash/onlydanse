@@ -8,13 +8,13 @@ import { DiscoveryFeed } from "./DiscoveryFeed";
 
 export function DancerDashboard() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1.5fr", gap: "24px" }}>
+    <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-[2fr_1.5fr] gap-6">
         <UpcomingEvents />
         <FollowingSection />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1.5fr", gap: "24px" }}>
+      <div className="grid grid-cols-[2fr_1.5fr] gap-6">
         <RecommendedEvents />
         <DiscoveryFeed />
       </div>
