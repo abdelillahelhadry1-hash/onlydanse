@@ -9,76 +9,29 @@ export function FollowingSection() {
     events: ["Urban Kiz Festival"],
   };
 
+  const renderGroup = (label, items) => (
+    <div className="mb-3">
+      <div className="text-xs text-gray-400 mb-1">{label}</div>
+      <div className="flex flex-wrap gap-1.5">
+        {items.map((name) => (
+          <span
+            key={name}
+            className="text-xs px-2 py-1 rounded-full bg-[#020617] border border-gray-800"
+          >
+            {name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
-    <section
-      style={{
-        background: "#020617",
-        borderRadius: "16px",
-        padding: "16px 18px",
-        border: "1px solid #1f2937",
-      }}
-    >
-      <h2 style={{ fontSize: "16px", fontWeight: 600, marginBottom: "12px" }}>Following</h2>
+    <section className="bg-[#020617] rounded-2xl p-4 border border-gray-800">
+      <h2 className="text-base font-semibold mb-3">Following</h2>
 
-      <div style={{ marginBottom: "12px" }}>
-        <div style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "4px" }}>Instructors</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-          {following.instructors.map((name) => (
-            <span
-              key={name}
-              style={{
-                fontSize: "12px",
-                padding: "4px 8px",
-                borderRadius: "999px",
-                background: "#020617",
-                border: "1px solid #1f2937",
-              }}
-            >
-              {name}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div style={{ marginBottom: "12px" }}>
-        <div style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "4px" }}>Studios</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-          {following.studios.map((name) => (
-            <span
-              key={name}
-              style={{
-                fontSize: "12px",
-                padding: "4px 8px",
-                borderRadius: "999px",
-                background: "#020617",
-                border: "1px solid #1f2937",
-              }}
-            >
-              {name}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <div style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "4px" }}>Events</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-          {following.events.map((name) => (
-            <span
-              key={name}
-              style={{
-                fontSize: "12px",
-                padding: "4px 8px",
-                borderRadius: "999px",
-                background: "#020617",
-                border: "1px solid #1f2937",
-              }}
-            >
-              {name}
-            </span>
-          ))}
-        </div>
-      </div>
+      {renderGroup("Instructors", following.instructors)}
+      {renderGroup("Studios", following.studios)}
+      {renderGroup("Events", following.events)}
     </section>
   );
 }
