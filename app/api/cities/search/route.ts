@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { createSupabaseClient } from "@/lib/supabaseClient";
 import { normalizeCity } from "@/lib/normalizeCity";
 import { aliasMap } from "@/lib/aliasMap";
@@ -12,36 +14,26 @@ export async function GET(req: Request) {
   const raw = searchParams.get("q") || "";
   const normalized = normalizeCity(raw);
 
-  if (!normalized) {
-    return Response.json([]);
-  }
+  if (!normalized) return Response.json([]);
 
   const english = aliasMap[normalized] || normalized;
 
-  // 1) Exact match in Supabase
   let { data: cities } = await supabase
     .from("cities")
     .select("*")
     .ilike("city_name", english);
 
-  if (cities && cities.length > 0) {
-    return Response.json(cities);
-  }
+  if (cities?.length) return Response.json(cities);
 
-  // 2) Fuzzy match
   let { data: allCities } = await supabase.from("cities").select("*");
   const fuzzy = allCities?.find((c) => fuzzyMatch(c.city_name, english));
   if (fuzzy) return Response.json([fuzzy]);
 
-  // 3) Google Places fallback
   const place = await getGooglePlace(english);
-  if (!place || !place.city || !place.country) {
-    return Response.json([]);
-  }
+  if (!place?.city || !place?.country) return Response.json([]);
 
   const formatted = formatCity(place.city, place.state, place.country);
 
-  // 4) Check by google_place_id
   const { data: existing } = await supabase
     .from("cities")
     .select("*")
@@ -50,7 +42,6 @@ export async function GET(req: Request) {
 
   if (existing) return Response.json([existing]);
 
-  // 5) Insert new city
   const { data: inserted } = await supabase
     .from("cities")
     .insert({
