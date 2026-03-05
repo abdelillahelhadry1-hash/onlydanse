@@ -9,19 +9,14 @@ const supabase = createClient(
 );
 
 async function activateRole(role: string) {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return;
 
-  // Insert role
   await supabase.from("user_roles").insert({
     user_id: user.id,
     role,
   });
 
-  // Create related profile rows
   if (role === "instructor") {
     await supabase.from("instructors").insert({ user_id: user.id });
   }
@@ -40,8 +35,6 @@ export default function Step3Roles() {
 
   async function handleSelect(role: string) {
     await activateRole(role);
-
-    // Redirect to dashboard (NOT homepage)
     router.push("/dashboard");
   }
 
