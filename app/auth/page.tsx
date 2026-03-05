@@ -49,7 +49,6 @@ export default function AuthPage() {
 
     if (error) return setError(error.message);
 
-    // Send custom confirmation email
     await fetch("/api/auth/send-confirmation", {
       method: "POST",
       body: JSON.stringify({ email }),
@@ -64,7 +63,6 @@ export default function AuthPage() {
         {mode === "login" ? "Log in" : "Create your account"}
       </h1>
 
-      {/* OAuth Buttons */}
       <div className="space-y-3 mb-8">
         <button
           onClick={() => signInWithProvider("google")}
@@ -90,7 +88,6 @@ export default function AuthPage() {
 
       <div className="text-center text-gray-500 my-4">or</div>
 
-      {/* Email / Password */}
       <div className="space-y-4">
         <input
           type="email"
